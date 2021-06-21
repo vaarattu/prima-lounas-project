@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout_food_menu_widget"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:padding="0dp">
+
+    <TextView
+        android:id="@+id/textview_dayname_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Testiotsikko"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorWhitesmoke"
+        android:textSize="20sp"
+        android:shadowColor="#000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="7"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_firstFood_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ruoka 1"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhitesmoke"
+            android:textSize="16sp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="7"/>
+
+        <TextView
+            android:id="@+id/textview_secondFood_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kanaa yrttitomaattikastikkeessa ja riisiä LG"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhitesmoke"
+            android:textSize="16sp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="7"/>
+
+        <TextView
+            android:id="@+id/textview_thirdFood_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ruoka 3"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhitesmoke"
+            android:textSize="16sp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="7"/>
+
+        <TextView
+            android:id="@+id/textview_fourthFood_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ruoka 4"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhitesmoke"
+            android:textSize="16sp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="7"/>
+
+    </LinearLayout>
+
+</LinearLayout>
