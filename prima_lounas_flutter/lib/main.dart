@@ -35,120 +35,252 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  RestaurantDayItem getToday() {
+    DateTime now = DateTime.now();
+    int day = now.day;
+    int month = now.month;
+
+    for (RestaurantDayItem item in items) {
+      List<String> split = item.day.split(".");
+      RegExp regExp = new RegExp(
+        r"\d+",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      String first = regExp.stringMatch(split.first).toString();
+      String last = regExp.stringMatch(split.last).toString();
+      if (int.parse(first) == day && int.parse(last) == month) {
+        return item;
+      }
+    }
+
+    return RestaurantDayItem("", []);
+  }
+
   @override
   Widget build(BuildContext context) {
     items.clear();
 
     List<RestaurantCourseItem> courses = [
-      RestaurantCourseItem("Salaattipöytä", []),
-      RestaurantCourseItem("Uunimakkaraa, perunamuusia", ["L", "G"]),
-      RestaurantCourseItem("Juustoista kukkakaalikeittoa", ["L", "G"]),
+      RestaurantCourseItem("Salaattipöytä", "4,70 €", []),
+      RestaurantCourseItem("Uunimakkaraa, perunamuusia", "7,00 €", ["L", "G"]),
+      RestaurantCourseItem("Juustoista kukkakaalikeittoa", "6,00 €", ["L", "G"]),
     ];
     items.add(RestaurantDayItem("Ma 21.6", courses));
 
     courses = [
-      RestaurantCourseItem("Salaattipöytä", []),
-      RestaurantCourseItem("Parmesan broilerpihviä, riisiä", ["L", "G"]),
-      RestaurantCourseItem("Jauhelihakeittoa", ["L", "G"]),
+      RestaurantCourseItem("Salaattipöytä", "4,70€", []),
+      RestaurantCourseItem("Parmesan broilerpihviä, riisiä", "7,00 €", ["L", "G"]),
+      RestaurantCourseItem("Jauhelihakeittoa", "6,00 €", ["L", "G"]),
     ];
     items.add(RestaurantDayItem("Ti 22.6", courses));
 
     courses = [
-      RestaurantCourseItem("Antipastopöytä", []),
-      RestaurantCourseItem("Janssoninkiusausta", ["L", "G"]),
-      RestaurantCourseItem("Herkkusienikeittoa", ["L", "G"]),
+      RestaurantCourseItem("Antipastopöytä", "4,70€", []),
+      RestaurantCourseItem("Janssoninkiusausta", "7,00 €", ["L", "G"]),
+      RestaurantCourseItem("Herkkusienikeittoa", "6,00 €", ["L", "G"]),
     ];
     items.add(RestaurantDayItem("Ke 23.6", courses));
 
     courses = [
-      RestaurantCourseItem("Salaattipöytä", []),
-      RestaurantCourseItem("Uunipossua, paistinkastiketta", []),
-      RestaurantCourseItem("Hernekeittoa", []),
+      RestaurantCourseItem("Salaattipöytä", "4,70€", []),
+      RestaurantCourseItem("Uunipossua, paistinkastiketta", "7,00 €", []),
+      RestaurantCourseItem("Hernekeittoa", "6,00 €", []),
     ];
     items.add(RestaurantDayItem("To 24.6", courses));
 
-    courses = [RestaurantCourseItem("Hyvää Juhannusta !", [])];
+    courses = [RestaurantCourseItem("Hyvää Juhannusta !", "", [])];
     items.add(RestaurantDayItem("Pe 25.6", courses));
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Text(
-                    "Prima Lounas Ky",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 20,
-                      ),
                       Text(
-                        "10:30-13:00",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                        "Prima Lounas Ky",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  RestaurantDayItem item = items[index];
-                  return Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            item.day,
-                            style: TextStyle(fontSize: 24),
+                          Icon(
+                            Icons.access_time,
+                            size: 20,
                           ),
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: item.courses.length,
-                            itemBuilder: (context, index) {
-                              RestaurantCourseItem course = item.courses[index];
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    course.course,
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: course.flags.length,
-                                    itemBuilder: (context, index) {
-                                      String flag = course.flags[index];
-                                      return AllergyIcon(
-                                        allergyType: flag == "G" ? AllergyType.Wheat : AllergyType.Lactose,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                          Text(
+                            "10:30-13:00",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-              ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "Tänään, ${getToday().day}",
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: getToday().courses.length,
+                        itemBuilder: (context, index) {
+                          RestaurantCourseItem course = getToday().courses[index];
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          course.course,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: course.flags.length == 0 ? 0 : 8,
+                                        ),
+                                        SizedBox(
+                                          height: course.flags.length == 0 ? 0 : 30,
+                                          child: ListView.builder(
+                                            physics: NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: course.flags.length,
+                                            itemBuilder: (context, index) {
+                                              String flag = course.flags[index];
+                                              return Padding(
+                                                padding: EdgeInsets.only(right: 8),
+                                                child: AllergyIcon(
+                                                    allergyType: flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      course.price,
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 36),
+                  child: Text(
+                    "Ruokalista viikko 25",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    RestaurantDayItem item = items[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(8, 24, 8, 8),
+                          child: Text(
+                            item.day,
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: item.courses.length,
+                          itemBuilder: (context, index) {
+                            RestaurantCourseItem course = item.courses[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Card(
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            course.course,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: course.flags.length == 0 ? 0 : 8,
+                                          ),
+                                          SizedBox(
+                                            height: course.flags.length == 0 ? 0 : 30,
+                                            child: ListView.builder(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: course.flags.length,
+                                              itemBuilder: (context, index) {
+                                                String flag = course.flags[index];
+                                                return Padding(
+                                                  padding: EdgeInsets.only(right: 8),
+                                                  child: AllergyIcon(
+                                                      allergyType:
+                                                          flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        course.price,
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -167,7 +299,7 @@ class AllergyIcon extends StatelessWidget {
   }
 
   IconData getIcon() {
-    return allergyType == AllergyType.Wheat ? PrimaLounasIcons.wheatwip : PrimaLounasIcons.milkwip;
+    return allergyType == AllergyType.Wheat ? PrimaLounasIcons.wheat : PrimaLounasIcons.milk;
   }
 
   @override
