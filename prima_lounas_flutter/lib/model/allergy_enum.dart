@@ -1,0 +1,1 @@
+enum AllergyType { Wheat, Lactose }
