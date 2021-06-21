@@ -57,6 +57,25 @@ class _HomePageState extends State<HomePage> {
     return RestaurantDayItem("", []);
   }
 
+  Icon getCourseIcon(String course) {
+    IconData data = PrimaLounasIcons.dish;
+    Color color = Colors.teal;
+    if (course.toLowerCase().contains("salaatti")) {
+      data = PrimaLounasIcons.salad;
+      color = Colors.green;
+    }
+    if (course.toLowerCase().contains("keitto")) {
+      data = PrimaLounasIcons.soup;
+      color = Colors.pink;
+    }
+
+    return Icon(
+      data,
+      size: 36,
+      color: color,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     items.clear();
@@ -149,35 +168,44 @@ class _HomePageState extends State<HomePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    Row(
                                       children: [
-                                        Text(
-                                          course.course,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 12),
+                                          child: getCourseIcon(course.course),
                                         ),
-                                        SizedBox(
-                                          height: course.flags.length == 0 ? 0 : 8,
-                                        ),
-                                        SizedBox(
-                                          height: course.flags.length == 0 ? 0 : 30,
-                                          child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: course.flags.length,
-                                            itemBuilder: (context, index) {
-                                              String flag = course.flags[index];
-                                              return Padding(
-                                                padding: EdgeInsets.only(right: 8),
-                                                child: AllergyIcon(
-                                                    allergyType: flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
-                                              );
-                                            },
-                                          ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              course.course,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: course.flags.length == 0 ? 0 : 8,
+                                            ),
+                                            SizedBox(
+                                              height: course.flags.length == 0 ? 0 : 30,
+                                              child: ListView.builder(
+                                                physics: NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: course.flags.length,
+                                                itemBuilder: (context, index) {
+                                                  String flag = course.flags[index];
+                                                  return Padding(
+                                                    padding: EdgeInsets.only(right: 8),
+                                                    child: AllergyIcon(
+                                                        allergyType:
+                                                            flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -232,36 +260,44 @@ class _HomePageState extends State<HomePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Text(
-                                            course.course,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 12),
+                                            child: getCourseIcon(course.course),
                                           ),
-                                          SizedBox(
-                                            height: course.flags.length == 0 ? 0 : 8,
-                                          ),
-                                          SizedBox(
-                                            height: course.flags.length == 0 ? 0 : 30,
-                                            child: ListView.builder(
-                                              physics: NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: course.flags.length,
-                                              itemBuilder: (context, index) {
-                                                String flag = course.flags[index];
-                                                return Padding(
-                                                  padding: EdgeInsets.only(right: 8),
-                                                  child: AllergyIcon(
-                                                      allergyType:
-                                                          flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
-                                                );
-                                              },
-                                            ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                course.course,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: course.flags.length == 0 ? 0 : 8,
+                                              ),
+                                              SizedBox(
+                                                height: course.flags.length == 0 ? 0 : 36,
+                                                child: ListView.builder(
+                                                  physics: NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemCount: course.flags.length,
+                                                  itemBuilder: (context, index) {
+                                                    String flag = course.flags[index];
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(right: 8),
+                                                      child: AllergyIcon(
+                                                          allergyType:
+                                                              flag == "G" ? AllergyType.Wheat : AllergyType.Lactose),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -299,7 +335,7 @@ class AllergyIcon extends StatelessWidget {
   }
 
   IconData getIcon() {
-    return allergyType == AllergyType.Wheat ? PrimaLounasIcons.wheat : PrimaLounasIcons.milk;
+    return allergyType == AllergyType.Wheat ? PrimaLounasIcons.no_wheat : PrimaLounasIcons.no_milk;
   }
 
   @override
@@ -307,14 +343,14 @@ class AllergyIcon extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: getColor().shade100,
+        color: getColor().shade900,
       ),
       child: Padding(
         padding: EdgeInsets.all(4),
         child: Icon(
           getIcon(),
-          size: 24,
-          color: getColor().shade900,
+          size: 20,
+          color: getColor().shade100,
         ),
       ),
     );
