@@ -1,11 +1,11 @@
-package com.primalounas.Objects;
+package ky.prima.lounas.android.object;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.primalounas.R;
+import ky.prima.lounas.android.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MenuItem extends AbstractItem<MenuItem.ViewHolder> {
+public class MenuItem extends AbstractItem<MenuItem, MenuItem.ViewHolder> {
 
     private String menuItemDay;
     private String menuItemFirst = "";

@@ -1,4 +1,4 @@
-package com.primalounas.Networking;
+package ky.prima.lounas.android.network;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package com.primalounas;
+package ky.prima.lounas.android;
 
 import android.content.Context;
 
@@ -21,7 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        assertEquals("com.primalounas", appContext.getPackageName());
+        assertEquals("ky.prima.lounas.android", appContext.getPackageName());
     }
 }

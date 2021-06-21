@@ -1,4 +1,4 @@
-package com.primalounas;
+package ky.prima.lounas.android;
 
 import org.junit.Test;
 

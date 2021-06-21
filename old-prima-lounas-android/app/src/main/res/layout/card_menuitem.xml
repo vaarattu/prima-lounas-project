@@ -33,45 +33,45 @@
                 style="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@color/colorWhitesmoke"/>
 
-        <LinearLayout
-            android:layout_marginLeft="4dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textview_firstFood"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_marginLeft="4dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Eka"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/colorWhitesmoke"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textview_secondFood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Toka"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/colorWhitesmoke"/>
+                <TextView
+                    android:id="@+id/textview_firstFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Eka"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorWhitesmoke"/>
 
-            <TextView
-                android:id="@+id/textview_thirdFood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kol"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/colorWhitesmoke"/>
+                <TextView
+                    android:id="@+id/textview_secondFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Toka"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorWhitesmoke"/>
 
-            <TextView
-                android:id="@+id/textview_fourthFood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nel"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/colorWhitesmoke"/>
+                <TextView
+                    android:id="@+id/textview_thirdFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kol"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorWhitesmoke"/>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textview_fourthFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nel"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorWhitesmoke"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

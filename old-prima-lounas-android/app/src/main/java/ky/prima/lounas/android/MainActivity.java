@@ -1,4 +1,4 @@
-package com.primalounas;
+package ky.prima.lounas.android;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.primalounas.Networking.GetFoodMenuService;
-import com.primalounas.Objects.MenuItem;
+import ky.prima.lounas.android.network.GetFoodMenuService;
+import ky.prima.lounas.android.object.MenuItem;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.jetbrains.annotations.NotNull;
