@@ -1,13 +1,13 @@
-package ky.prima.lounas.backend;
+package fi.vaarattu.lounasravintola;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendApplication {
+public class LounasravintolaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(LounasravintolaApplication.class, args);
 	}
 
 }
