@@ -8,16 +8,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.divit.springboot.application.model.RestResponse;
 import com.divit.springboot.application.model.RestaurantCourse;
 import com.divit.springboot.application.model.RestaurantDay;
 import org.apache.poi.hwpf.HWPFDocument;
 
 public final class RestaurantUtil {
 
-    public static List<RestaurantDay> getWeekMenu(){
-        List<RestaurantDay> items = new ArrayList<>();
+    public static RestResponse getWeekMenu(){
+        RestResponse restResponse = new RestResponse();
 
         try {
+            List<RestaurantDay> items = new ArrayList<>();
+
             String stringUrl = "https://drive.google.com/uc?id=0B8nQh-fa3RbLMFN0X1QxaDFhYzQ&export=download";
             URL url = new URL(stringUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -130,15 +133,35 @@ public final class RestaurantUtil {
                 String day = array[0];
 
                 for (int j = 1; j < array.length; j++) {
-                    courses.add(new RestaurantCourse(array[j], "", List.of()));
+                    String price = "?€";
+                    String name = array[j];
+                    if (name.contains("pöytä")){
+                        price = saladPrice;
+                    }
+                    else if (name.contains("keitto")){
+                        price = soupPrice;
+                    }
+                    else {
+                        price = foodPrice;
+                    }
+
+                    price = price.split(" ", 2)[1];
+
+                    courses.add(new RestaurantCourse(array[j], price, List.of()));
                 }
                 items.add(new RestaurantDay(day, courses));
             }
-con.disconnect();
+            con.disconnect();
+            restResponse.setItems(items);
+            restResponse.setResponseCode(1);
         } catch (Exception e){
-
+            restResponse.setErrorText(e.getMessage());
+            restResponse.setResponseCode(2);
         }
-        return items;
+
+        return restResponse;
+
+        //return items;
     }
 
     public static List<RestaurantDay> getWeekMenuMock() {

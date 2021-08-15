@@ -1,7 +1,6 @@
 package com.divit.springboot.application.model;
 
 import java.util.List;
-import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
