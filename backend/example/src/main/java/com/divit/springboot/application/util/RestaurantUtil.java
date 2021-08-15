@@ -131,32 +131,52 @@ public final class RestaurantUtil {
                 String[] array = dayMenu.get(i).toArray(new String[0]);
                 List<RestaurantCourse> courses = new ArrayList<>();
                 String day = array[0];
+                String type = "";
 
                 for (int j = 1; j < array.length; j++) {
                     String price = "?€";
                     String name = array[j];
-                    if (name.contains("pöytä")){
+                    if (name.contains("pöytä")) {
                         price = saladPrice;
-                    }
-                    else if (name.contains("keitto")){
+                        type = "salad";
+                    } else if (name.contains("keitto")) {
                         price = soupPrice;
-                    }
-                    else {
+                        type = "soup";
+                    } else {
                         price = foodPrice;
+                        type = "main";
                     }
 
                     price = price.split(" ", 2)[1];
 
-                    courses.add(new RestaurantCourse(array[j], price, List.of()));
+                    String[] nameSplit = name.split(" ");
+                    String allergens = nameSplit[nameSplit.length - 1];
+                    String[] allergensSplt = {};
+
+                    boolean foundAllergens = true;
+                    for (int k = 0; k < allergens.length(); k++) {
+                        if (Character.isLowerCase(allergens.charAt(k))) {
+                            foundAllergens = false;
+                        }
+                    }
+                    if (foundAllergens) {
+                        allergensSplt = allergens.split(",");
+                        name = name.replaceAll(allergens, "");
+                    }
+                    name = name.trim();
+
+                    courses.add(new RestaurantCourse(name, price, type, List.of(allergensSplt)));
                 }
                 items.add(new RestaurantDay(day, courses));
             }
             con.disconnect();
-            restResponse.setItems(items);
+            restResponse.setErrorText("Success!");
             restResponse.setResponseCode(1);
+            restResponse.setItems(items);
         } catch (Exception e){
             restResponse.setErrorText(e.getMessage());
             restResponse.setResponseCode(2);
+            restResponse.setItems(List.of());
         }
 
         return restResponse;
@@ -168,33 +188,33 @@ public final class RestaurantUtil {
         List<RestaurantDay> items = new ArrayList<>();
 
         List<RestaurantCourse> courses = List.of(
-                new RestaurantCourse("Salaattipöytä", "4,70 €", new ArrayList<>()),
-                new RestaurantCourse("Uunimakkaraa, perunamuusia", "7,00 €", List.of("L", "G")),
-                new RestaurantCourse("Juustoista kukkakaalikeittoa", "6,00 €", List.of("L", "G")));
+                new RestaurantCourse("Salaattipöytä", "4,70 €", "", new ArrayList<>()),
+                new RestaurantCourse("Uunimakkaraa, perunamuusia", "7,00 €", "", List.of("L", "G")),
+                new RestaurantCourse("Juustoista kukkakaalikeittoa", "6,00 €", "", List.of("L", "G")));
         items.add(new RestaurantDay("Ma 21.6", courses));
 
         courses = List.of(
-                new RestaurantCourse("Salaattipöytä", "4,70€", new ArrayList<>()),
-                new RestaurantCourse("Parmesan broilerpihviä, riisiä", "7,00 €", List.of("L", "G")),
-                new RestaurantCourse("Jauhelihakeittoa", "6,00 €", List.of("L", "G"))
+                new RestaurantCourse("Salaattipöytä", "4,70€", "", new ArrayList<>()),
+                new RestaurantCourse("Parmesan broilerpihviä, riisiä", "7,00 €", "", List.of("L", "G")),
+                new RestaurantCourse("Jauhelihakeittoa", "6,00 €", "", List.of("L", "G"))
         );
         items.add(new RestaurantDay("Ti 22.6", courses));
 
         courses = List.of(
-                new RestaurantCourse("Antipastopöytä", "4,70€", new ArrayList<>()),
-                new RestaurantCourse("Janssoninkiusausta", "7,00 €", List.of("L", "G")),
-                new RestaurantCourse("Herkkusienikeittoa", "6,00 €", List.of("L", "G"))
+                new RestaurantCourse("Antipastopöytä", "4,70€", "", new ArrayList<>()),
+                new RestaurantCourse("Janssoninkiusausta", "7,00 €", "", List.of("L", "G")),
+                new RestaurantCourse("Herkkusienikeittoa", "6,00 €", "", List.of("L", "G"))
         );
         items.add(new RestaurantDay("Ke 23.6", courses));
 
         courses = List.of(
-                new RestaurantCourse("Salaattipöytä", "4,70€", new ArrayList<>()),
-                new RestaurantCourse("Uunipossua, paistinkastiketta", "7,00 €", new ArrayList<>()),
-                new RestaurantCourse("Hernekeittoa", "6,00 €", new ArrayList<>())
+                new RestaurantCourse("Salaattipöytä", "4,70€", "", new ArrayList<>()),
+                new RestaurantCourse("Uunipossua, paistinkastiketta", "7,00 €", "", new ArrayList<>()),
+                new RestaurantCourse("Hernekeittoa", "6,00 €", "", new ArrayList<>())
         );
         items.add(new RestaurantDay("To 24.6", courses));
 
-        courses = List.of(new RestaurantCourse("Hyvää Juhannusta !", "", new ArrayList<>()));
+        courses = List.of(new RestaurantCourse("Hyvää Juhannusta !", "", "", new ArrayList<>()));
         items.add(new RestaurantDay("Pe 25.6", courses));
 
         return items;
@@ -208,9 +228,9 @@ public final class RestaurantUtil {
         List<RestaurantDay> items = new ArrayList<>();
 
         List<RestaurantCourse> courses = List.of(
-                new RestaurantCourse("Salaattipöytä", "4,70 €", new ArrayList<>()),
-                new RestaurantCourse("Uunimakkaraa, perunamuusia", "7,00 €", List.of("L", "G")),
-                new RestaurantCourse("Juustoista kukkakaalikeittoa", "6,00 €", List.of("L", "G")));
+                new RestaurantCourse("Salaattipöytä", "4,70 €", "", new ArrayList<>()),
+                new RestaurantCourse("Uunimakkaraa, perunamuusia", "7,00 €", "", List.of("L", "G")),
+                new RestaurantCourse("Juustoista kukkakaalikeittoa", "6,00 €", "", List.of("L", "G")));
         items.add(new RestaurantDay("Ma 21.6", courses));
 
         return items;
