@@ -3,7 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:prima_lounas_flutter/model/allergy_enum.dart';
 import 'package:prima_lounas_flutter/model/restaurant_course_item.dart';
 import 'package:prima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:prima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:prima_lounas_flutter/utils/icons.dart';
+
+import 'services/networking.dart';
 
 void main() {
   runApp(PrimaLounasApp());
@@ -33,6 +36,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getLocationData();
+  }
+
+  void getLocationData() async {
+    NetworkHelper networkHelper = NetworkHelper("http://10.0.2.2:8888/api/v1/week");
+    var restaurantData = await networkHelper.getData();
+    final restaurantWeekMenu = restaurantWeekMenuFromJson(restaurantData);
   }
 
   RestaurantDayItem getToday() {
@@ -78,6 +88,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    /*
     items.clear();
 
     List<RestaurantCourseItem> courses = [
@@ -110,7 +121,7 @@ class _HomePageState extends State<HomePage> {
 
     courses = [RestaurantCourseItem("Hyvää Juhannusta !", "", [])];
     items.add(RestaurantDayItem("Pe 25.6", courses));
-
+*/
     return Scaffold(
       body: SafeArea(
         child: ListView(
