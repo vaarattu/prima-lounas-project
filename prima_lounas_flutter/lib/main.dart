@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:prima_lounas_flutter/model/allergy_enum.dart';
+import 'package:prima_lounas_flutter/utils/constants.dart';
 import 'package:prima_lounas_flutter/utils/icons.dart';
 
 import 'model/restaurant_day_item.dart';
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     try {
       http.Response response = await http
           .get(
-            Uri.parse("http://10.0.2.2:8888/api/v1/week"),
+            Uri.parse(herokuURL),
           )
           .timeout(
             const Duration(seconds: 5),
