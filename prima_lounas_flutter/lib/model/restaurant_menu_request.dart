@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final restaurantWeekMenu = restaurantWeekMenuFromJson(jsonString);
+//     final restaurantMenuRequest = restaurantMenuRequestFromJson(jsonString);
 
 import 'dart:convert';
 
-RestaurantWeekMenu restaurantWeekMenuFromJson(String str) => RestaurantWeekMenu.fromJson(json.decode(str));
+RestaurantMenuRequest restaurantMenuRequestFromJson(String str) => RestaurantMenuRequest.fromJson(json.decode(str));
 
-String restaurantWeekMenuToJson(RestaurantWeekMenu data) => json.encode(data.toJson());
+String restaurantMenuRequestToJson(RestaurantMenuRequest data) => json.encode(data.toJson());
 
-class RestaurantWeekMenu {
-  RestaurantWeekMenu({
+class RestaurantMenuRequest {
+  RestaurantMenuRequest({
     required this.responseCode,
     required this.errorText,
     required this.items,
@@ -17,12 +17,12 @@ class RestaurantWeekMenu {
 
   int responseCode;
   String errorText;
-  List<Item> items;
+  List<RestaurantDayItem> items;
 
-  factory RestaurantWeekMenu.fromJson(Map<String, dynamic> json) => RestaurantWeekMenu(
+  factory RestaurantMenuRequest.fromJson(Map<String, dynamic> json) => RestaurantMenuRequest(
         responseCode: json["responseCode"],
         errorText: json["errorText"],
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+        items: List<RestaurantDayItem>.from(json["items"].map((x) => RestaurantDayItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,18 +32,18 @@ class RestaurantWeekMenu {
       };
 }
 
-class Item {
-  Item({
+class RestaurantDayItem {
+  RestaurantDayItem({
     required this.day,
     required this.courses,
   });
 
   String day;
-  List<Course> courses;
+  List<RestaurantCourseItem> courses;
 
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
+  factory RestaurantDayItem.fromJson(Map<String, dynamic> json) => RestaurantDayItem(
         day: json["day"],
-        courses: List<Course>.from(json["courses"].map((x) => Course.fromJson(x))),
+        courses: List<RestaurantCourseItem>.from(json["courses"].map((x) => RestaurantCourseItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,8 +52,8 @@ class Item {
       };
 }
 
-class Course {
-  Course({
+class RestaurantCourseItem {
+  RestaurantCourseItem({
     required this.name,
     required this.price,
     required this.type,
@@ -65,7 +65,7 @@ class Course {
   String type;
   List<String> flags;
 
-  factory Course.fromJson(Map<String, dynamic> json) => Course(
+  factory RestaurantCourseItem.fromJson(Map<String, dynamic> json) => RestaurantCourseItem(
         name: json["name"],
         price: json["price"],
         type: json["type"],

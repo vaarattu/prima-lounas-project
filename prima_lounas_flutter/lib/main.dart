@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:prima_lounas_flutter/model/allergy_enum.dart';
-import 'package:prima_lounas_flutter/model/restaurant_course_item.dart';
-import 'package:prima_lounas_flutter/model/restaurant_day_item.dart';
-import 'package:prima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:prima_lounas_flutter/utils/icons.dart';
 
+import 'model/restaurant_menu_request.dart';
 import 'services/networking.dart';
 
 void main() {
@@ -36,13 +34,26 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getLocationData();
+    getRestaurantMenu();
   }
 
-  void getLocationData() async {
+  void getRestaurantMenu() async {
     NetworkHelper networkHelper = NetworkHelper("http://10.0.2.2:8888/api/v1/week");
     var restaurantData = await networkHelper.getData();
-    final restaurantWeekMenu = restaurantWeekMenuFromJson(restaurantData);
+    final restaurantMenuRequest = restaurantMenuRequestFromJson(restaurantData);
+    // succesful request and got items
+    if (restaurantMenuRequest.responseCode == 1 && restaurantMenuRequest.items.length > 0) {
+      items = restaurantMenuRequest.items;
+    } else {
+      // success but no items for some reason
+      if (restaurantMenuRequest.responseCode == 2) {
+        String errorText = "No items were returned";
+      }
+      // display error
+      else {
+        String errorText = restaurantMenuRequest.errorText;
+      }
+    }
   }
 
   RestaurantDayItem getToday() {
@@ -64,17 +75,20 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    return RestaurantDayItem("", []);
+    return RestaurantDayItem(day: "ERROR", courses: [
+      RestaurantCourseItem(name: "ERROR", price: "ERROR", type: "ERROR", flags: []),
+    ]);
   }
 
-  Icon getCourseIcon(String course) {
+  Icon getCourseIcon(RestaurantCourseItem course) {
+    // default
     IconData data = PrimaLounasIcons.dish;
     Color color = Colors.teal;
-    if (course.toLowerCase().contains("salaatti")) {
+    if (course.type == "salad") {
       data = PrimaLounasIcons.salad;
       color = Colors.green;
     }
-    if (course.toLowerCase().contains("keitto")) {
+    if (course.type == "soup") {
       data = PrimaLounasIcons.soup;
       color = Colors.pink;
     }
@@ -88,40 +102,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    /*
-    items.clear();
-
-    List<RestaurantCourseItem> courses = [
-      RestaurantCourseItem("Salaattipöytä", "4,70 €", []),
-      RestaurantCourseItem("Uunimakkaraa, perunamuusia", "7,00 €", ["L", "G"]),
-      RestaurantCourseItem("Juustoista kukkakaalikeittoa", "6,00 €", ["L", "G"]),
-    ];
-    items.add(RestaurantDayItem("Ma 21.6", courses));
-
-    courses = [
-      RestaurantCourseItem("Salaattipöytä", "4,70€", []),
-      RestaurantCourseItem("Parmesan broilerpihviä, riisiä", "7,00 €", ["L", "G"]),
-      RestaurantCourseItem("Jauhelihakeittoa", "6,00 €", ["L", "G"]),
-    ];
-    items.add(RestaurantDayItem("Ti 22.6", courses));
-
-    courses = [
-      RestaurantCourseItem("Antipastopöytä", "4,70€", []),
-      RestaurantCourseItem("Janssoninkiusausta", "7,00 €", ["L", "G"]),
-      RestaurantCourseItem("Herkkusienikeittoa", "6,00 €", ["L", "G"]),
-    ];
-    items.add(RestaurantDayItem("Ke 23.6", courses));
-
-    courses = [
-      RestaurantCourseItem("Salaattipöytä", "4,70€", []),
-      RestaurantCourseItem("Uunipossua, paistinkastiketta", "7,00 €", []),
-      RestaurantCourseItem("Hernekeittoa", "6,00 €", []),
-    ];
-    items.add(RestaurantDayItem("To 24.6", courses));
-
-    courses = [RestaurantCourseItem("Hyvää Juhannusta !", "", [])];
-    items.add(RestaurantDayItem("Pe 25.6", courses));
-*/
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -183,13 +163,13 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(right: 12),
-                                          child: getCourseIcon(course.course),
+                                          child: getCourseIcon(course),
                                         ),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              course.course,
+                                              course.name,
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -275,13 +255,13 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.only(right: 12),
-                                            child: getCourseIcon(course.course),
+                                            child: getCourseIcon(course),
                                           ),
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                course.course,
+                                                course.name,
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
