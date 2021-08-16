@@ -1,7 +1,6 @@
 package com.divit.springboot.application.util;
 
 import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,11 +10,14 @@ import java.util.List;
 import com.divit.springboot.application.model.RestResponse;
 import com.divit.springboot.application.model.RestaurantCourse;
 import com.divit.springboot.application.model.RestaurantDay;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hwpf.HWPFDocument;
 
+@Slf4j
 public final class RestaurantUtil {
 
     public static RestResponse getWeekMenu(){
+        log.info("Parsing restaurant week menu.");
         RestResponse restResponse = new RestResponse();
 
         try {
@@ -151,7 +153,7 @@ public final class RestaurantUtil {
 
                     String[] nameSplit = name.split(" ");
                     String allergens = nameSplit[nameSplit.length - 1];
-                    String[] allergensSplt = {};
+                    String[] allergensSplit = {};
 
                     boolean foundAllergens = true;
                     for (int k = 0; k < allergens.length(); k++) {
@@ -160,12 +162,12 @@ public final class RestaurantUtil {
                         }
                     }
                     if (foundAllergens) {
-                        allergensSplt = allergens.split(",");
+                        allergensSplit = allergens.split(",");
                         name = name.replaceAll(allergens, "");
                     }
                     name = name.trim();
 
-                    courses.add(new RestaurantCourse(name, price, type, List.of(allergensSplt)));
+                    courses.add(new RestaurantCourse(name, price, type, List.of(allergensSplit)));
                 }
                 items.add(new RestaurantDay(day, courses));
             }
@@ -173,15 +175,15 @@ public final class RestaurantUtil {
             restResponse.setErrorText("Success!");
             restResponse.setResponseCode(1);
             restResponse.setItems(items);
+            log.info("Successfully parsed week menu.");
         } catch (Exception e){
             restResponse.setErrorText(e.getMessage());
             restResponse.setResponseCode(2);
             restResponse.setItems(List.of());
+            log.error("Error parsing week menu, exception: " + e.getMessage(), e);
         }
 
         return restResponse;
-
-        //return items;
     }
 
     public static List<RestaurantDay> getWeekMenuMock() {
