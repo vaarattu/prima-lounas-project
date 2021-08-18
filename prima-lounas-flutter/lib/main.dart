@@ -57,7 +57,9 @@ class _HomePageState extends State<HomePage> {
       int statusCode = response.statusCode;
       if (statusCode == 200) {
         String json = response.body;
-        items = restaurantDayItemFromJson(json);
+        setState(() {
+          items = restaurantDayItemFromJson(json);
+        });
       } else {
         errorText = response.body;
         isError = true;
