@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:prima_lounas_flutter/utils/constants.dart';
@@ -31,7 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   bool isError = false;
-  List<RestaurantDayItem> items = [];
+  List<Day> items = [];
 
   @override
   void initState() {
@@ -48,17 +50,14 @@ class _HomePageState extends State<HomePage> {
 
     try {
       http.Response response = await http
-          .get(
-            Uri.parse(herokuURL),
-          )
-          .timeout(
-            const Duration(seconds: 5),
-          );
+          .get(Uri.parse(raspiUrl), headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
+        const Duration(seconds: 5),
+      );
       int statusCode = response.statusCode;
       if (statusCode == 200) {
         String json = response.body;
         setState(() {
-          items = restaurantDayItemFromJson(json);
+          items = restaurantWeekMenuItemFromJson(json).days;
         });
       } else {
         errorText = response.body;
@@ -74,12 +73,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  RestaurantDayItem getToday() {
+  Day getToday() {
     DateTime now = DateTime.now();
     int day = now.day;
     int month = now.month;
 
-    for (RestaurantDayItem item in items) {
+    for (Day item in items) {
       List<String> split = item.day.split(".");
       RegExp regExp = new RegExp(
         r"\d+",
@@ -94,8 +93,8 @@ class _HomePageState extends State<HomePage> {
     }
 
 // current day not found
-    return RestaurantDayItem(day: "ERROR", courses: [
-      RestaurantCourseItem(name: "ERROR", price: "ERROR", type: "ERROR", flags: []),
+    return Day(id: 0, day: "ERROR", courses: [
+      Course(id: 0, name: "ERROR", price: "ERROR", type: "ERROR", tags: []),
     ]);
   }
 
@@ -151,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                           shrinkWrap: true,
                           itemCount: getToday().courses.length,
                           itemBuilder: (context, index) {
-                            RestaurantCourseItem course = getToday().courses[index];
+                            Course course = getToday().courses[index];
                             return RestaurantCourseCard(course: course);
                           },
                         ),
@@ -170,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                     shrinkWrap: true,
                     itemCount: items.length,
                     itemBuilder: (context, index) {
-                      RestaurantDayItem item = items[index];
+                      Day item = items[index];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -186,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                             shrinkWrap: true,
                             itemCount: item.courses.length,
                             itemBuilder: (context, index) {
-                              RestaurantCourseItem course = item.courses[index];
+                              Course course = item.courses[index];
                               return RestaurantCourseCard(course: course);
                             },
                           ),
@@ -195,6 +194,9 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 12,
               ),
             ],
           ),
@@ -209,9 +211,9 @@ class RestaurantCourseCard extends StatelessWidget {
     required this.course,
   });
 
-  final RestaurantCourseItem course;
+  final Course course;
 
-  Icon getCourseIcon(RestaurantCourseItem course) {
+  Icon getCourseIcon(Course course) {
     // default
     IconData data = PrimaLounasIcons.dish;
     Color color = Colors.teal;
@@ -260,17 +262,17 @@ class RestaurantCourseCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: course.flags.length == 0 ? 0 : 8,
+                            height: course.tags.length == 0 ? 0 : 8,
                           ),
                           SizedBox(
-                            height: course.flags.length == 0 ? 0 : 30,
+                            height: course.tags.length == 0 ? 0 : 30,
                             child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              itemCount: course.flags.length,
+                              itemCount: course.tags.length,
                               itemBuilder: (context, index) {
-                                String flag = course.flags[index];
+                                String flag = course.tags[index];
                                 return Padding(
                                   padding: EdgeInsets.only(right: 8),
                                   child: AllergyIcon(allergyFlag: flag),
