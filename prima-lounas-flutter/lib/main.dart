@@ -33,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   bool isError = false;
+  String errorText = "";
   List<Day> items = [];
 
   @override
@@ -42,16 +43,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future getRestaurantMenu() async {
-    String errorText;
     setState(() {
-      isLoading = true;
       isError = false;
+      isLoading = true;
     });
 
     try {
       http.Response response = await http
-          .get(Uri.parse(raspiUrl), headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
-        const Duration(seconds: 5),
+          .get(Uri.parse(dropletUrl), headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
+        const Duration(seconds: 10),
       );
       int statusCode = response.statusCode;
       if (statusCode == 200) {
@@ -65,16 +65,32 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       errorText = e.toString();
+      if (errorText.contains("Connection failed") || errorText.contains("SocketException")) {
+        errorText = "Yhteys epäonnistui. \nTarkista Internet-yhteytesi.";
+      }
+      if (errorText.contains("TimeoutException")) {
+        errorText = "Palvelin ei vastannut ajoissa. \nJoko palvelin on alhaalla tai Internetyhteytesi käy hitaalla.";
+      }
       isError = true;
     }
-
+    errorText = "Tapahtui virhe: \n\n" + errorText;
     setState(() {
       isLoading = false;
+      isError = isError;
     });
   }
 
   Day getToday() {
     DateTime now = DateTime.now();
+    int weekDay = now.weekday;
+
+    // is weekend
+    if (weekDay == 6 || weekDay == 7) {
+      return Day(id: -1, day: "ERROR", courses: [
+        Course(id: -1, name: "ERROR", price: "ERROR", type: "ERROR", tags: []),
+      ]);
+    }
+
     int day = now.day;
     int month = now.month;
 
@@ -92,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-// current day not found
+    // current day not found
     return Day(id: 0, day: "ERROR", courses: [
       Course(id: 0, name: "ERROR", price: "ERROR", type: "ERROR", tags: []),
     ]);
@@ -102,104 +118,143 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => getRestaurantMenu(),
-          child: ListView(
-            children: [
-              Column(
+        child: Builder(
+          builder: (context) {
+            if (isLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (isError) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Prima Lounas Ky",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              size: 20,
-                            ),
-                            Text(
-                              "10:30-13:00",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        ),
-                      ],
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Text(
+                        errorText,
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ElevatedButton(
+                    onPressed: () => getRestaurantMenu(),
+                    child: Text("Yritä uudelleen"),
+                  ),
+                ],
+              );
+            }
+            if (!isLoading && !isError) {
+              return RefreshIndicator(
+                onRefresh: () => getRestaurantMenu(),
+                child: ListView(
+                  children: [
+                    Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Prima Lounas Ky",
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    "10:30-13:00",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        getToday().id == -1
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  "Ensi viikon ruokalista on saatavilla sunnuntai-illasta tai maanantaiaamusta.",
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                                ),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Text(
+                                        "Tänään, ${getToday().day}",
+                                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: getToday().courses.length,
+                                      itemBuilder: (context, index) {
+                                        Course course = getToday().courses[index];
+                                        return RestaurantCourseCard(course: course);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 36),
                           child: Text(
-                            "Tänään, ${getToday().day}",
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            "Ruokalista viikko 25",
+                            style: TextStyle(fontSize: 24),
                           ),
                         ),
                         ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: getToday().courses.length,
+                          itemCount: items.length,
                           itemBuilder: (context, index) {
-                            Course course = getToday().courses[index];
-                            return RestaurantCourseCard(course: course);
+                            Day item = items[index];
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(8, 24, 8, 8),
+                                  child: Text(
+                                    item.day,
+                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: item.courses.length,
+                                  itemBuilder: (context, index) {
+                                    Course course = item.courses[index];
+                                    return RestaurantCourseCard(course: course);
+                                  },
+                                ),
+                              ],
+                            );
                           },
                         ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 36),
-                    child: Text(
-                      "Ruokalista viikko 25",
-                      style: TextStyle(fontSize: 24),
+                    SizedBox(
+                      height: 12,
                     ),
-                  ),
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      Day item = items[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(8, 24, 8, 8),
-                            child: Text(
-                              item.day,
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: item.courses.length,
-                            itemBuilder: (context, index) {
-                              Course course = item.courses[index];
-                              return RestaurantCourseCard(course: course);
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 12,
-              ),
-            ],
-          ),
+                  ],
+                ),
+              );
+            }
+            return Text("ERROR");
+          },
         ),
       ),
     );
