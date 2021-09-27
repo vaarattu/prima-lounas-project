@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-RestaurantWeekMenuItem restaurantWeekMenuItemFromJson(String str) => RestaurantWeekMenuItem.fromJson(json.decode(str));
+List<RestaurantWeekMenuItem> restaurantWeekMenuItemFromJson(String str) =>
+    List<RestaurantWeekMenuItem>.from(json.decode(str).map((x) => RestaurantWeekMenuItem.fromJson(x)));
 
-String restaurantWeekMenuItemToJson(RestaurantWeekMenuItem data) => json.encode(data.toJson());
+String restaurantWeekMenuItemToJson(List<RestaurantWeekMenuItem> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RestaurantWeekMenuItem {
   RestaurantWeekMenuItem({
