@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:prima_lounas_flutter/pages/restaurant_history_page.dart';
-import 'package:prima_lounas_flutter/pages/restaurant_menu_page.dart';
-import 'package:prima_lounas_flutter/widgets/lazy_indexed_stack.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_history_page.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_lists_page.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_menu_page.dart';
+import 'package:priima_lounas_flutter/widgets/lazy_indexed_stack.dart';
 
 void main() {
-  runApp(PrimaLounasApp());
+  runApp(PriimaLounasApp());
 }
 
-class PrimaLounasApp extends StatelessWidget {
+class PriimaLounasApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Prima Lounas",
+      title: "Priima Lounas",
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.blue,
       ),
@@ -28,7 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int bottomBarIndex = 0;
 
-  final pages = [RestaurantMenuPage(), RestaurantHistoryPage()];
+  final pages = [RestaurantMenuPage(), RestaurantListsPage(), RestaurantHistoryPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant),
             label: "Ruokalista",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: "Listat",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),

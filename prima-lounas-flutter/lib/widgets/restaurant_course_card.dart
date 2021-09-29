@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prima_lounas_flutter/model/restaurant_day_item.dart';
-import 'package:prima_lounas_flutter/utils/icons.dart';
-import 'package:prima_lounas_flutter/widgets/allergy_icon.dart';
+import 'package:priima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:priima_lounas_flutter/utils/icons.dart';
+import 'package:priima_lounas_flutter/widgets/allergy_icon.dart';
 
 class RestaurantCourseCard extends StatelessWidget {
   const RestaurantCourseCard({

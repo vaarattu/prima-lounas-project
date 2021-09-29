@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prima_lounas_flutter/utils/icons.dart';
+import 'package:priima_lounas_flutter/utils/icons.dart';
 
 class AllergyIcon extends StatelessWidget {
   final String allergyFlag;

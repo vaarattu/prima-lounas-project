@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:prima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_day_item.dart';
 import "package:http/http.dart" as http;
-import 'package:prima_lounas_flutter/utils/constants.dart';
-import 'package:prima_lounas_flutter/widgets/restaurant_course_card.dart';
+import 'package:priima_lounas_flutter/utils/constants.dart';
+import 'package:priima_lounas_flutter/widgets/restaurant_course_card.dart';
 
 class RestaurantMenuPage extends StatefulWidget {
   @override
@@ -52,7 +52,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
         customErrorText = "Tämän viikon ruokalista ei ole vielä saatavilla.";
       }
       if (originalErrorText.contains("Connection failed") || originalErrorText.contains("SocketException")) {
-        originalErrorText = originalErrorText.replaceAll(", address = 165.22.81.146, port = 8888", "");
+        originalErrorText = originalErrorText.replaceAll("165.22.81.146", "*");
         customErrorText = "Yhteys epäonnistui. \nPalvelin on alhaalla tai et ole yhteydessä Internettiin.";
       }
       if (originalErrorText.contains("TimeoutException")) {
@@ -164,7 +164,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                       ? Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            "Ensi viikon ruokalista on saatavilla sunnuntai-illasta tai maanantaiaamusta.",
+                            "Ensi viikon ruokalista on yleensä saatavilla sunnuntai-illasta tai maanantaiaamusta.",
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                           ),
                         )
