@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/pages/restaurant_history_page.dart';
 import 'package:priima_lounas_flutter/pages/restaurant_lists_page.dart';
 import 'package:priima_lounas_flutter/pages/restaurant_menu_page.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_vote_page.dart';
 import 'package:priima_lounas_flutter/widgets/lazy_indexed_stack.dart';
 
 void main() {
@@ -29,12 +30,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int bottomBarIndex = 0;
 
-  final pages = [RestaurantMenuPage(), RestaurantListsPage(), RestaurantHistoryPage()];
+  final pages = [RestaurantMenuPage(), RestaurantListsPage(), RestaurantVotePage(), RestaurantHistoryPage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
         currentIndex: bottomBarIndex,
         onTap: (index) => setState(() => bottomBarIndex = index),
         selectedItemColor: Colors.white,
@@ -47,14 +49,22 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant),
             label: "Ruokalista",
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.how_to_vote),
+            label: "Äänestä",
+            backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: "Listat",
+            backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
             label: "Historia",
+            backgroundColor: Colors.blue,
           ),
         ],
       ),
