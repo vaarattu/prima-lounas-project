@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import "package:http/http.dart" as http;
 import 'package:priima_lounas_flutter/utils/constants.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
@@ -42,8 +42,6 @@ class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
     }
   }
 
-/*                      ,
-                      ),*/
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {

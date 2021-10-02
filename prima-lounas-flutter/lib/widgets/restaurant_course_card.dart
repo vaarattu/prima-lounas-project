@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import 'package:priima_lounas_flutter/utils/icons.dart';
 import 'package:priima_lounas_flutter/widgets/allergy_icon.dart';
 

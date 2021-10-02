@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/restaurant_day_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import "package:http/http.dart" as http;
 import 'package:priima_lounas_flutter/utils/constants.dart';
 import 'package:priima_lounas_flutter/widgets/restaurant_course_card.dart';
@@ -74,7 +74,13 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
     // is weekend
     if (weekDay == 6 || weekDay == 7) {
       return Day(id: -1, day: "ERROR", courses: [
-        Course(id: -1, name: "ERROR", price: "ERROR", type: "ERROR", tags: []),
+        Course(
+            id: -1,
+            name: "ERROR",
+            price: "ERROR",
+            type: "ERROR",
+            tags: [],
+            courseVote: new CourseVote(id: -1, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
       ]);
     }
 
@@ -97,7 +103,13 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
 
     // current day not found
     return Day(id: 0, day: "ERROR", courses: [
-      Course(id: 0, name: "ERROR", price: "ERROR", type: "ERROR", tags: []),
+      Course(
+          id: 0,
+          name: "ERROR",
+          price: "ERROR",
+          type: "ERROR",
+          tags: [],
+          courseVote: new CourseVote(id: 0, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
     ]);
   }
 

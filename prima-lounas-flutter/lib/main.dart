@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int bottomBarIndex = 0;
 
-  final pages = [RestaurantMenuPage(), RestaurantListsPage(), RestaurantVotePage(), RestaurantHistoryPage()];
+  final pages = [RestaurantMenuPage(), RestaurantVotePage(), RestaurantListsPage(), RestaurantHistoryPage()];
 
   @override
   Widget build(BuildContext context) {
