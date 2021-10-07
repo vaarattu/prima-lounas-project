@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/pages/restaurant_history_page.dart';
-import 'package:priima_lounas_flutter/pages/restaurant_lists_page.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_more_page.dart';
+import 'package:priima_lounas_flutter/pages/restaurant_vote_lists_page.dart';
 import 'package:priima_lounas_flutter/pages/restaurant_menu_page.dart';
-import 'package:priima_lounas_flutter/pages/restaurant_vote_page.dart';
 import 'package:priima_lounas_flutter/widgets/lazy_indexed_stack.dart';
 
 void main() {
@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int bottomBarIndex = 0;
 
-  final pages = [RestaurantMenuPage(), RestaurantVotePage(), RestaurantListsPage(), RestaurantHistoryPage()];
+  final pages = [RestaurantMenuPage(), RestaurantVoteListsPage(), RestaurantHistoryPage(), RestaurantMorePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +57,13 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "Listat",
+            icon: Icon(Icons.history),
+            label: "Historia",
             backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: "Historia",
+            icon: Icon(Icons.more),
+            label: "Muut",
             backgroundColor: Colors.blue,
           ),
         ],

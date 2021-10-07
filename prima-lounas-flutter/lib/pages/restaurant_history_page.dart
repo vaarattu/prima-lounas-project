@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
 import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
-import "package:http/http.dart" as http;
-import 'package:priima_lounas_flutter/utils/constants.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
+import 'package:priima_lounas_flutter/widgets/error_display.dart';
 
 class RestaurantHistoryPage extends StatefulWidget {
   @override
@@ -13,32 +12,36 @@ class RestaurantHistoryPage extends StatefulWidget {
 
 class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
   late List<RestaurantWeekMenuItem> items;
-
   bool loading = true;
+  bool error = false;
+  String errorText = "";
 
   @override
   void initState() {
     super.initState();
-    getRestaurantWeekMenu();
+    getAllWeeks();
   }
 
-  Future getRestaurantWeekMenu() async {
-    try {
-      http.Response response = await http.get(Uri.parse(dropletUrl + "/api/v1/all"),
-          headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
-        const Duration(seconds: 10),
-      );
-      int statusCode = response.statusCode;
-      if (statusCode == 200) {
-        String json = response.body;
-        setState(() {
-          items = restaurantWeekMenuItemFromJson(json);
-          items.sort((a, b) => b.id.compareTo(a.id));
-          loading = false;
-        });
-      }
-    } catch (e) {
-      String s = e.toString();
+  getAllWeeks() async {
+    setState(() {
+      loading = true;
+      error = false;
+    });
+    RestaurantMenuService service = RestaurantMenuService();
+    var data = await service.getFromApi(RestApiType.allWeeks);
+    if (data is String) {
+      setState(() {
+        errorText = data;
+        loading = false;
+        error = true;
+      });
+    } else {
+      setState(() {
+        items = data;
+        items.sort((a, b) => b.id.compareTo(a.id));
+        loading = false;
+        error = false;
+      });
     }
   }
 
@@ -46,8 +49,15 @@ class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       if (loading) {
-        return Text("Loading");
-      } else {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (error) {
+        return ErrorDisplayWidget(
+          errorText: errorText,
+          callback: getAllWeeks,
+        );
+      }
+      if (!loading && !error) {
         return Container(
           width: double.infinity,
           child: ListView.builder(
@@ -111,6 +121,7 @@ class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
           ),
         );
       }
+      return Text("ERROR");
     });
   }
 }

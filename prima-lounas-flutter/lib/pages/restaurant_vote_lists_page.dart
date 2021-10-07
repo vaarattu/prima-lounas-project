@@ -1,44 +1,62 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/frequent_course_item.dart';
-import 'package:priima_lounas_flutter/utils/constants.dart';
-import "package:http/http.dart" as http;
+import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
 import 'package:priima_lounas_flutter/utils/icons.dart';
 import 'package:priima_lounas_flutter/utils/trophy_icons.dart';
+import 'package:priima_lounas_flutter/widgets/error_display.dart';
 
-class RestaurantListsPage extends StatefulWidget {
+class RestaurantVoteListsPage extends StatefulWidget {
   @override
-  _RestaurantListsPageState createState() => _RestaurantListsPageState();
+  _RestaurantVoteListsPageState createState() => _RestaurantVoteListsPageState();
 }
 
-class _RestaurantListsPageState extends State<RestaurantListsPage> {
+class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
   late List<FrequentCourseItem> items;
 
   bool loading = true;
+  bool error = false;
+  String errorText = "";
 
   @override
   void initState() {
     super.initState();
-    getRestaurantWeekMenu();
+    getFrequentCourses();
   }
 
-  Future getRestaurantWeekMenu() async {
-    try {
-      http.Response response = await http.get(Uri.parse(dropletUrl + "/api/v1/frequent"),
-          headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
-        const Duration(seconds: 10),
-      );
-      int statusCode = response.statusCode;
-      if (statusCode == 200) {
-        String json = response.body;
-        setState(() {
-          items = frequentCourseItemFromJson(json);
-          loading = false;
-        });
-      }
-    } catch (e) {
-      String s = e.toString();
+  vote() async {
+    List<CourseVote> votes = [];
+    RestaurantMenuService service = RestaurantMenuService();
+    var data = await service.postToApi(RestApiType.vote, votes);
+    if (data is String) {
+      //TODO ERROR
+    } else {
+      List<CourseVote> updatedVotes = data;
+    }
+  }
+
+  getFrequentCourses() async {
+    setState(() {
+      loading = true;
+      error = false;
+    });
+
+    RestaurantMenuService service = RestaurantMenuService();
+    var data = await service.getFromApi(RestApiType.frequentCourses);
+
+    if (data is String) {
+      setState(() {
+        loading = false;
+        error = true;
+        errorText = data;
+      });
+    } else {
+      setState(() {
+        loading = false;
+        error = false;
+        items = data;
+      });
     }
   }
 
@@ -90,8 +108,15 @@ class _RestaurantListsPageState extends State<RestaurantListsPage> {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       if (loading) {
-        return Text("Loading");
-      } else {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (error) {
+        return ErrorDisplayWidget(
+          errorText: errorText,
+          callback: getFrequentCourses,
+        );
+      }
+      if (!loading && !error) {
         return Container(
           width: double.infinity,
           child: ListView(
@@ -165,6 +190,7 @@ class _RestaurantListsPageState extends State<RestaurantListsPage> {
           ),
         );
       }
+      return Text("ERROR");
     });
   }
 }

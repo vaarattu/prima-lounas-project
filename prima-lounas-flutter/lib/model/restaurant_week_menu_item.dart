@@ -6,13 +6,14 @@ import 'dart:convert';
 
 List<RestaurantWeekMenuItem> restaurantWeekMenuItemFromJson(String str) =>
     List<RestaurantWeekMenuItem>.from(json.decode(str).map((x) => RestaurantWeekMenuItem.fromJson(x)));
-
 String restaurantWeekMenuItemToJson(List<RestaurantWeekMenuItem> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+List<Course> courseFromJson(String str) => List<Course>.from(json.decode(str).map((x) => Course.fromJson(x)));
+String courseToJson(List<Course> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 List<CourseVote> courseVoteListFromJson(String str) =>
     List<CourseVote>.from(json.decode(str).map((x) => CourseVote.fromJson(x)));
-
 String courseVoteListToJson(List<CourseVote> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class RestaurantWeekMenuItem {

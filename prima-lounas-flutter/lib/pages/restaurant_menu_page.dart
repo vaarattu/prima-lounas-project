@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
 import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
-import "package:http/http.dart" as http;
-import 'package:priima_lounas_flutter/utils/constants.dart';
+import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
+import 'package:priima_lounas_flutter/widgets/error_display.dart';
 import 'package:priima_lounas_flutter/widgets/restaurant_course_card.dart';
 
 class RestaurantMenuPage extends StatefulWidget {
@@ -12,59 +11,46 @@ class RestaurantMenuPage extends StatefulWidget {
 }
 
 class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
-  bool isLoading = true;
-  bool isError = false;
-  String customErrorText = "";
-  String originalErrorText = "";
+  bool loading = true;
+  bool error = false;
+  String errorText = "";
   late RestaurantWeekMenuItem weekMenu;
 
   @override
   void initState() {
     super.initState();
-    getRestaurantWeekMenu();
+    getWeekMenu();
   }
 
-  Future getRestaurantWeekMenu() async {
+  getWeekMenu() async {
     setState(() {
-      isError = false;
-      isLoading = true;
+      error = false;
+      loading = true;
     });
 
-    try {
-      http.Response response = await http.get(Uri.parse(dropletUrl + "/api/v1/menu"),
-          headers: {HttpHeaders.acceptHeader: "application/json; charset=UTF-8"}).timeout(
-        const Duration(seconds: 10),
-      );
-      int statusCode = response.statusCode;
-      if (statusCode == 200) {
-        String json = response.body;
+    RestaurantMenuService service = RestaurantMenuService();
+    var data = await service.getFromApi(RestApiType.weekMenu);
+    if (data is String) {
+      setState(() {
+        error = true;
+        loading = false;
+        errorText = data;
+      });
+    } else {
+      if (data.length == 0) {
         setState(() {
-          weekMenu = restaurantWeekMenuItemFromJson(json)[0];
+          error = true;
+          loading = false;
+          errorText = "Tämän viikon ruokalista ei ole vielä saatavilla.";
         });
       } else {
-        isError = true;
-        originalErrorText = response.body;
-      }
-    } catch (e) {
-      isError = true;
-      originalErrorText = e.toString();
-      if (originalErrorText.contains("RangeError")) {
-        customErrorText = "Tämän viikon ruokalista ei ole vielä saatavilla.";
-      }
-      if (originalErrorText.contains("Connection failed") || originalErrorText.contains("SocketException")) {
-        originalErrorText = originalErrorText.replaceAll("165.22.81.146", "*");
-        customErrorText = "Yhteys epäonnistui. \nPalvelin on alhaalla tai et ole yhteydessä Internettiin.";
-      }
-      if (originalErrorText.contains("TimeoutException")) {
-        customErrorText =
-            "Palvelin ei vastannut ajoissa. \nJoko palvelin on alhaalla tai Internetyhteytesi käy hitaalla.";
+        setState(() {
+          error = false;
+          loading = false;
+          weekMenu = data[0];
+        });
       }
     }
-
-    setState(() {
-      isLoading = false;
-      isError = isError;
-    });
   }
 
   Day getToday() {
@@ -116,33 +102,18 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      if (isLoading) {
+      if (loading) {
         return Center(child: CircularProgressIndicator());
       }
-      if (isError) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Text(
-                  "Tapahtui virhe: \n\n" + originalErrorText + "\n\n\nTulkinta: \n\n" + customErrorText + "\n\n",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => getRestaurantWeekMenu(),
-              child: Text("Yritä uudelleen"),
-            ),
-          ],
+      if (error) {
+        return ErrorDisplayWidget(
+          errorText: errorText,
+          callback: getWeekMenu,
         );
       }
-      if (!isLoading && !isError) {
+      if (!loading && !error) {
         return RefreshIndicator(
-          onRefresh: () => getRestaurantWeekMenu(),
+          onRefresh: () => getWeekMenu(),
           child: ListView(
             children: [
               Column(
@@ -153,7 +124,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "Prima Lounas Ky",
+                          "Priima Lounas Ky",
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Row(
