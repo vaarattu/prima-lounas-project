@@ -1,34 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
-import 'package:priima_lounas_flutter/utils/icons.dart';
 import 'package:priima_lounas_flutter/widgets/allergy_icon.dart';
+import 'package:priima_lounas_flutter/widgets/course_icon.dart';
+import 'package:priima_lounas_flutter/widgets/like_dislike_icons.dart';
 
 class RestaurantCourseCard extends StatelessWidget {
   const RestaurantCourseCard({
     required this.course,
+    required this.showVoteButtons,
   });
 
   final Course course;
-
-  Icon getCourseIcon(Course course) {
-    // default
-    IconData data = PrimaLounasIcons.dish;
-    Color color = Colors.teal;
-    if (course.type == "salad") {
-      data = PrimaLounasIcons.salad;
-      color = Colors.green;
-    }
-    if (course.type == "soup") {
-      data = PrimaLounasIcons.soup;
-      color = Colors.pink;
-    }
-
-    return Icon(
-      data,
-      size: 36,
-      color: color,
-    );
-  }
+  final bool showVoteButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +19,7 @@ class RestaurantCourseCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(12),
+          padding: EdgeInsets.only(left: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -45,7 +28,7 @@ class RestaurantCourseCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(right: 12),
-                      child: getCourseIcon(course),
+                      child: CourseIcon(courseName: course.name),
                     ),
                     Flexible(
                       child: Column(
@@ -83,10 +66,13 @@ class RestaurantCourseCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                course.price,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
+              showVoteButtons
+                  ? LikeDislikeIcons(
+                      courseId: course.id,
+                    )
+                  : Container(
+                      height: 72,
+                    ),
             ],
           ),
         ),

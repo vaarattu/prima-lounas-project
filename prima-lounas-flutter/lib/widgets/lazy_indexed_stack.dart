@@ -12,9 +12,7 @@ class LazyIndexedStack extends StatefulWidget {
     this.alignment = AlignmentDirectional.topStart,
     this.textDirection = TextDirection.ltr,
     this.sizing = StackFit.loose,
-  })  : assert(index != null),
-        assert(children != null),
-        super(key: key);
+  }) : super(key: key);
 
   final int index;
   final List<Widget> children;

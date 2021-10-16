@@ -1,1 +1,1 @@
-enum RestApiType { weekMenu, allWeeks, allCourses, frequentCourses, vote }
+enum RestApiType { weekMenu, allWeeks, allCourses, frequentCourses, vote, votes }

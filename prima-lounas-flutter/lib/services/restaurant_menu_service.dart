@@ -11,6 +11,7 @@ const apiAllWeeks = "/all";
 const apiFrequentCourses = "/frequent";
 const apiAllCourses = "/courses";
 const apiVote = "/vote";
+const apiVotes = "/votes";
 
 class RestaurantMenuService {
   Networking _networking = Networking();
@@ -54,6 +55,8 @@ class RestaurantMenuService {
         return apiAllCourses;
       case RestApiType.vote:
         return apiVote;
+      case RestApiType.votes:
+        return apiVotes;
     }
   }
 
@@ -67,6 +70,7 @@ class RestaurantMenuService {
       case RestApiType.allCourses:
         return courseFromJson(json);
       case RestApiType.vote:
+      case RestApiType.votes:
         return courseVoteListFromJson(json);
     }
   }
@@ -81,6 +85,7 @@ class RestaurantMenuService {
       case RestApiType.allCourses:
         return courseToJson(object);
       case RestApiType.vote:
+      case RestApiType.votes:
         return courseVoteListToJson(object);
     }
   }

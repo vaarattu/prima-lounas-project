@@ -53,13 +53,27 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
     }
   }
 
+  String fixDayName(String dayName) {
+    dayName = dayName.replaceAll("Ma", "Maanantaina");
+    dayName = dayName.replaceAll("Ti", "Tiistaina");
+    dayName = dayName.replaceAll("Ke", "Keskiviikkona");
+    dayName = dayName.replaceAll("To", "Torstaina");
+    dayName = dayName.replaceAll("Pe", "Perjantaina");
+
+    return dayName + ".";
+  }
+
   Day getToday() {
     DateTime now = DateTime.now();
     int weekDay = now.weekday;
 
     // is weekend
     if (weekDay == 6 || weekDay == 7) {
-      return Day(id: -1, day: "ERROR", courses: [
+      int id = -1;
+      if (getTomorrow().id != -1) {
+        id = -2;
+      }
+      return Day(id: id, day: "ERROR", courses: [
         Course(
             id: -1,
             name: "ERROR",
@@ -99,6 +113,53 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
     ]);
   }
 
+  Day getTomorrow() {
+    DateTime now = DateTime.now();
+    now = now.add(new Duration(days: 1));
+    int weekDay = now.weekday;
+
+    // is weekend
+    if (weekDay == 6 || weekDay == 7) {
+      return Day(id: -1, day: "ERROR", courses: [
+        Course(
+            id: -1,
+            name: "ERROR",
+            price: "ERROR",
+            type: "ERROR",
+            tags: [],
+            courseVote: new CourseVote(id: -1, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
+      ]);
+    }
+
+    int day = now.day;
+    int month = now.month;
+
+    for (Day item in weekMenu.days) {
+      List<String> split = item.day.split(".");
+      RegExp regExp = new RegExp(
+        r"\d+",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      String first = regExp.stringMatch(split.first).toString();
+      String last = regExp.stringMatch(split.last).toString();
+      if (int.parse(first) == day && int.parse(last) == month) {
+        return item;
+      }
+    }
+
+    // current day not found
+    return Day(id: -1, day: "ERROR", courses: [
+      Course(
+          id: 0,
+          name: "ERROR",
+          price: "ERROR",
+          type: "ERROR",
+          tags: [],
+          courseVote: new CourseVote(id: 0, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
@@ -125,11 +186,15 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                       children: [
                         Text(
                           "Priima Lounas Ky",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Text(
+                              "Lounas",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                            ),
                             Icon(
                               Icons.access_time,
                               size: 20,
@@ -140,45 +205,112 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  getToday().id == -1
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            "Ensi viikon ruokalista on yleensä saatavilla sunnuntai-illasta tai maanantaiaamusta.",
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                          ),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  "Tänään, ${getToday().day}",
-                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                                ),
+                              Text(
+                                "Salaatti: 4,70€",
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                               ),
-                              ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: getToday().courses.length,
-                                itemBuilder: (context, index) {
-                                  Course course = getToday().courses[index];
-                                  return RestaurantCourseCard(course: course);
-                                },
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "Keitto: 6,00€",
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "Kotiruoka: 7,00€",
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                               ),
                             ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  Builder(builder: (context) {
+                    if (getToday().id == -1) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          "Ensi viikon ruokalista on yleensä saatavilla sunnuntai-illasta tai maanantaiaamusta.",
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                        ),
+                      );
+                    }
+                    if (getToday().id == -2) {
+                      return Container();
+                    }
+                    return Container(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text(
+                              "Tänään, ${fixDayName(getToday().day)}",
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: getToday().courses.length,
+                            itemBuilder: (context, index) {
+                              Course course = getToday().courses[index];
+                              return RestaurantCourseCard(
+                                course: course,
+                                showVoteButtons: true,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  getTomorrow().id == -1
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Container(
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    "Huomenna, ${fixDayName(getTomorrow().day)}",
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: getTomorrow().courses.length,
+                                  itemBuilder: (context, index) {
+                                    Course course = getTomorrow().courses[index];
+                                    return RestaurantCourseCard(
+                                      course: course,
+                                      showVoteButtons: false,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                   Padding(
-                    padding: EdgeInsets.only(top: 36),
+                    padding: EdgeInsets.only(top: 24),
                     child: Text(
-                      weekMenu.weekName,
+                      "KOKO " + weekMenu.weekName,
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
@@ -194,8 +326,8 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(8, 24, 8, 8),
                             child: Text(
-                              item.day,
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                              fixDayName(item.day),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ),
                           ListView.builder(
@@ -204,7 +336,10 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                             itemCount: item.courses.length,
                             itemBuilder: (context, index) {
                               Course course = item.courses[index];
-                              return RestaurantCourseCard(course: course);
+                              return RestaurantCourseCard(
+                                course: course,
+                                showVoteButtons: false,
+                              );
                             },
                           ),
                         ],
