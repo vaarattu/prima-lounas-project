@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
-import 'package:priima_lounas_flutter/widgets/allergy_icon.dart';
-import 'package:priima_lounas_flutter/widgets/course_icon.dart';
-import 'package:priima_lounas_flutter/widgets/like_dislike_icons.dart';
+import 'package:priima_lounas_flutter/widgets/icons/allergy_icon.dart';
+import 'package:priima_lounas_flutter/widgets/icons/course_icon.dart';
+import 'package:priima_lounas_flutter/widgets/icons/like_dislike_icons.dart';
 
 class RestaurantCourseCard extends StatelessWidget {
   const RestaurantCourseCard({

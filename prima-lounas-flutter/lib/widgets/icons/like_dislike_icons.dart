@@ -71,6 +71,9 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
   }
 
   void likePressed() {
+    if (disableVoting) {
+      return;
+    }
     bool bLiked = liked;
     bool bDisliked = disliked;
     setState(() {
@@ -81,6 +84,9 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
   }
 
   void dislikePressed() {
+    if (disableVoting) {
+      return;
+    }
     bool bLiked = liked;
     bool bDisliked = disliked;
     setState(() {
@@ -99,16 +105,17 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
       requestCount = 0;
     }
 
-    String snackText;
-    Color snackColor;
-    Color textColor;
+    String snackText = "";
+    Color snackColor = Colors.black;
+    Color textColor = Colors.white;
+
     if (requestCount >= 2) {
       snackText = "⚠ Odota hetki ennenkuin yrität uudelleen ⚠";
-      snackColor = Colors.yellow.shade600;
+      snackColor = Colors.yellow.shade500;
       textColor = Colors.black;
 
       SnackBar snackBar = new SnackBar(
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
         content: Text(
           snackText,
           style: TextStyle(color: textColor, fontSize: 16),
@@ -147,16 +154,32 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
       }
 
       CourseVote courseVote = new CourseVote(id: courseId, likes: likes, dislikes: dislikes, votes: 0, ranked: 0);
-      var backendResult = await vote(courseVote);
       var localResult = await service.addToFile(
         new UserSavedVote(id: this.courseId, liked: this.liked, disliked: this.disliked),
       );
-      textColor = Colors.white;
-      if (backendResult is List<CourseVote> && localResult) {
-        snackText = "✅ Kiitos äänestä ✅";
-        snackColor = Colors.green.shade500;
-        requestCount++;
+
+      bool failed = false;
+
+      // succesfully saved to device
+      if (localResult) {
+        var backendResult = await vote(courseVote);
+        // succesfully saved to backend
+        if (backendResult is List<CourseVote>) {
+          snackText = "✅ Kiitos äänestä ✅";
+          snackColor = Colors.green.shade500;
+          requestCount++;
+        }
+        // backend save failed so revert device save
+        else {
+          await service.addToFile(
+            new UserSavedVote(id: this.courseId, liked: bLiked, disliked: bDisliked),
+          );
+          failed = true;
+        }
       } else {
+        failed = true;
+      }
+      if (failed) {
         snackText = "🆘 Äänestäminen epäonnistui 🆘";
         snackColor = Colors.red.shade600;
         setState(() {
@@ -205,7 +228,7 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
             height: 36,
             child: IconButton(
               padding: EdgeInsets.all(0),
-              onPressed: disableVoting ? null : likePressed,
+              onPressed: likePressed,
               icon: getIcon(true),
             ),
           ),
@@ -214,7 +237,7 @@ class _LikeDislikeIconsState extends State<LikeDislikeIcons> {
             height: 36,
             child: IconButton(
               padding: EdgeInsets.all(0),
-              onPressed: disableVoting ? null : dislikePressed,
+              onPressed: dislikePressed,
               icon: getIcon(false),
             ),
           ),

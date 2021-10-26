@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/frequent_course_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import 'package:priima_lounas_flutter/widgets/course_data_row.dart';
 
-class FrequentCoursesList extends StatelessWidget {
-  const FrequentCoursesList({Key? key, required this.frequentCourses}) : super(key: key);
+class LikesDislikesCoursesList extends StatelessWidget {
+  const LikesDislikesCoursesList({Key? key, required this.courses}) : super(key: key);
 
-  final List<FrequentCourseItem> frequentCourses;
+  final List<Course> courses;
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +26,23 @@ class FrequentCoursesList extends StatelessWidget {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: frequentCourses.length,
+                  itemCount: courses.length,
                   itemBuilder: (context, index) {
-                    FrequentCourseItem course = frequentCourses[index];
+                    Course course = courses[index];
+                    CourseVote vote = course.courseVote;
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Card(child: CourseDataRow(courseName: course.name, index: index, count: course.count)),
+                      child: Card(
+                          child: Column(
+                        children: [
+                          CourseDataRow(courseName: course.name, index: index, count: 0),
+                          LinearProgressIndicator(
+                            backgroundColor: Colors.red,
+                            color: Colors.green,
+                            value: vote.calculateLikeDislikeRatio(),
+                          ),
+                        ],
+                      )),
                     );
                   },
                 ),

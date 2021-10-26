@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/widgets/course_icon.dart';
-import 'package:priima_lounas_flutter/widgets/trophy_icon.dart';
+import 'package:priima_lounas_flutter/widgets/icons/course_icon.dart';
+import 'package:priima_lounas_flutter/widgets/icons/trophy_icon.dart';
 
 class CourseDataRow extends StatelessWidget {
   const CourseDataRow({Key? key, required this.courseName, required this.index, required this.count}) : super(key: key);
@@ -44,10 +44,12 @@ class CourseDataRow extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            count.toString(),
-            style: TextStyle(fontSize: 18),
-          ),
+          count == 0
+              ? Container()
+              : Text(
+                  count.toString(),
+                  style: TextStyle(fontSize: 18),
+                ),
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
 import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
 import 'package:priima_lounas_flutter/widgets/error_display.dart';
-import 'package:priima_lounas_flutter/widgets/restaurant_course_card.dart';
+import 'package:priima_lounas_flutter/widgets/cards/restaurant_course_card.dart';
 
 class RestaurantMenuPage extends StatefulWidget {
   @override
@@ -102,7 +102,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
     }
 
     // current day not found
-    return Day(id: 0, day: "ERROR", courses: [
+    return Day(id: -3, day: "ERROR", courses: [
       Course(
           id: 0,
           name: "ERROR",
@@ -246,6 +246,13 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                     }
                     if (getToday().id == -2) {
                       return Container();
+                    }
+                    if (getToday().id == -3) {
+                      return Text(
+                        "Tätä päivää ei löydy tämän viikon listasta?",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 18, color: Colors.orange),
+                      );
                     }
                     return Container(
                       width: double.infinity,
