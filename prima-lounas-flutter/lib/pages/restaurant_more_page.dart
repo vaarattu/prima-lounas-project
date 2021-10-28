@@ -119,7 +119,7 @@ class _RestaurantMorePageState extends State<RestaurantMorePage> {
             MorePageCard(
               title: "Virheilmoitukset",
               body: "Lähetä virheilmoitukset kehittäjälle",
-              icon: Icons.report_problem,
+              icon: Icons.send,
               callback: getDeviceInfo,
             ),
             MorePageCard(
@@ -143,7 +143,7 @@ class _RestaurantMorePageState extends State<RestaurantMorePage> {
             MorePageCard(
               title: "Lähetä palautetta",
               body: "Anna palautetta sovelluksesta",
-              icon: Icons.feedback,
+              icon: Icons.mail,
               callback: sendEmailFeedback,
             ),
             MorePageCard(

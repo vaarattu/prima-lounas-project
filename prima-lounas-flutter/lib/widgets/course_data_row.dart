@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
 import 'package:priima_lounas_flutter/widgets/icons/course_icon.dart';
 import 'package:priima_lounas_flutter/widgets/icons/trophy_icon.dart';
 
 class CourseDataRow extends StatelessWidget {
-  const CourseDataRow({Key? key, required this.courseName, required this.index, required this.count}) : super(key: key);
+  const CourseDataRow(
+      {Key? key, required this.course, required this.index, required this.count, required this.showLikesDislikes})
+      : super(key: key);
 
-  final String courseName;
+  final dynamic course;
   final int index;
   final int count;
+  final bool showLikesDislikes;
 
   Widget getCourseIcon() {
     if (index < 3) {
       return TrophyIcon(index: index);
     } else {
-      return CourseIcon(courseName: courseName);
+      return CourseIcon(courseName: course.name);
     }
   }
 
@@ -30,14 +34,54 @@ class CourseDataRow extends StatelessWidget {
                 getCourseIcon(),
                 Flexible(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 18),
                         child: Text(
-                          courseName,
+                          course.name,
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
+                      !showLikesDislikes
+                          ? Container()
+                          : Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 18),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.thumb_up,
+                                    color: Colors.green,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 4),
+                                    child: Text(
+                                      course.courseVote.likes.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: LinearProgressIndicator(
+                                      minHeight: 6,
+                                      backgroundColor: Colors.red,
+                                      color: Colors.green,
+                                      value: course.courseVote.calculateLikeDislikeRatio(),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 4),
+                                    child: Text(
+                                      course.courseVote.dislikes.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.thumb_down,
+                                    color: Colors.red,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),

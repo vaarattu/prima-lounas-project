@@ -74,4 +74,8 @@ class UserSavedVotesService {
       return null;
     }
   }
+
+  Future<dynamic> readAllFromFile() async {
+    return await _readFile();
+  }
 }

@@ -19,30 +19,35 @@ class LikesDislikesCoursesList extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                   child: Text(
-                    "Yleisimmät ruokalajit",
+                    "Tykätyimmät",
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: courses.length,
+                  itemCount: courses.where((element) => element.courseVote.calculateLikeDislikeRatio() != -1).length,
                   itemBuilder: (context, index) {
                     Course course = courses[index];
-                    CourseVote vote = course.courseVote;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                      ),
                       child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(4.0),
                           child: Column(
-                        children: [
-                          CourseDataRow(courseName: course.name, index: index, count: 0),
-                          LinearProgressIndicator(
-                            backgroundColor: Colors.red,
-                            color: Colors.green,
-                            value: vote.calculateLikeDislikeRatio(),
+                            children: [
+                              CourseDataRow(
+                                course: course,
+                                index: index,
+                                count: 0,
+                                showLikesDislikes: true,
+                              ),
+                            ],
                           ),
-                        ],
-                      )),
+                        ),
+                      ),
                     );
                   },
                 ),

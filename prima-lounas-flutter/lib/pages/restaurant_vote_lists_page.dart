@@ -125,11 +125,19 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
         );
       }
       if (!loading && !error) {
-        return Column(
-          children: [
-            FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
-            LikesDislikesCoursesSummaryCard(courses: allCourses),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: LikesDislikesCoursesSummaryCard(courses: allCourses),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
+              ),
+            ],
+          ),
         );
       }
       return Text("ERROR");

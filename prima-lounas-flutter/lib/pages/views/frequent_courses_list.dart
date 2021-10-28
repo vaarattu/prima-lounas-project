@@ -31,7 +31,13 @@ class FrequentCoursesList extends StatelessWidget {
                     FrequentCourseItem course = frequentCourses[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Card(child: CourseDataRow(courseName: course.name, index: index, count: course.count)),
+                      child: Card(
+                          child: CourseDataRow(
+                        course: course,
+                        index: index,
+                        count: course.count,
+                        showLikesDislikes: false,
+                      )),
                     );
                   },
                 ),
