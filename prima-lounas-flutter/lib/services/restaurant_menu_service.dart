@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
 import 'package:priima_lounas_flutter/model/frequent_course_item.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/services/networking.dart';
 import 'package:tuple/tuple.dart';
 

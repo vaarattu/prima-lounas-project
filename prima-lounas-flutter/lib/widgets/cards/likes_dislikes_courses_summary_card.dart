@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/pages/views/likes_dislikes_courses_list.dart';
 import 'package:priima_lounas_flutter/pages/views/vote_likes_dislikes.dart';
 
 import '../course_data_row.dart';
 
 class LikesDislikesCoursesSummaryCard extends StatelessWidget {
-  const LikesDislikesCoursesSummaryCard({Key? key, required this.courses}) : super(key: key);
+  const LikesDislikesCoursesSummaryCard({Key? key, required this.courses, required this.callback}) : super(key: key);
 
   final List<Course> courses;
+  final VoidCallback callback;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class LikesDislikesCoursesSummaryCard extends StatelessWidget {
                               courses: this.courses,
                             ),
                           ),
-                        );
+                        ).then((value) => callback());
                       },
                       child: Text("Äänestä"),
                     ),

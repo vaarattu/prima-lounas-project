@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
 import 'package:priima_lounas_flutter/widgets/error_display.dart';
 import 'package:priima_lounas_flutter/widgets/cards/restaurant_course_card.dart';
@@ -14,7 +14,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
   bool loading = true;
   bool error = false;
   String errorText = "";
-  late RestaurantWeekMenuItem weekMenu;
+  late RestaurantWeekMenu weekMenu;
 
   @override
   void initState() {
@@ -77,7 +77,6 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
         Course(
             id: -1,
             name: "ERROR",
-            price: "ERROR",
             type: "ERROR",
             tags: [],
             courseVote: new CourseVote(id: -1, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
@@ -106,7 +105,6 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
       Course(
           id: 0,
           name: "ERROR",
-          price: "ERROR",
           type: "ERROR",
           tags: [],
           courseVote: new CourseVote(id: 0, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
@@ -124,7 +122,6 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
         Course(
             id: -1,
             name: "ERROR",
-            price: "ERROR",
             type: "ERROR",
             tags: [],
             courseVote: new CourseVote(id: -1, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
@@ -153,7 +150,6 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
       Course(
           id: 0,
           name: "ERROR",
-          price: "ERROR",
           type: "ERROR",
           tags: [],
           courseVote: new CourseVote(id: 0, likes: 0, dislikes: 0, votes: 0, ranked: 0)),
@@ -211,21 +207,21 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Salaatti: 4,70€",
+                                "Salaatti: ${weekMenu.saladPrice}",
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
                                 width: 8,
                               ),
                               Text(
-                                "Keitto: 6,00€",
+                                "Keitto: ${weekMenu.soupPrice}",
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
                                 width: 8,
                               ),
                               Text(
-                                "Kotiruoka: 7,00€",
+                                "Kotiruoka: ${weekMenu.foodPrice}",
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                               ),
                             ],

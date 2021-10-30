@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/model/user_saved_vote.dart';
 import 'package:priima_lounas_flutter/services/local_data_service.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';

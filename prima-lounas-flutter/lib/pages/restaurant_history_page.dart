@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
 import 'package:priima_lounas_flutter/widgets/error_display.dart';
@@ -11,7 +11,7 @@ class RestaurantHistoryPage extends StatefulWidget {
 }
 
 class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
-  late List<RestaurantWeekMenuItem> items;
+  late List<RestaurantWeekMenu> items;
   bool loading = true;
   bool error = false;
   String errorText = "";
@@ -64,7 +64,7 @@ class _RestaurantHistoryPageState extends State<RestaurantHistoryPage> {
             shrinkWrap: true,
             itemCount: items.length,
             itemBuilder: (context, index) {
-              RestaurantWeekMenuItem week = items[index];
+              RestaurantWeekMenu week = items[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
                 child: Card(

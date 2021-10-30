@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/widgets/course_data_row.dart';
 
 class LikesDislikesCoursesList extends StatelessWidget {

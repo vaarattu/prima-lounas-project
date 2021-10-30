@@ -12,7 +12,7 @@
         </intent>
     </queries>
    <application
-        android:label="Prima Lounas"
+        android:label="Priima Lounas"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

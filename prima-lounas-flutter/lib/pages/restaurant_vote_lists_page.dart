@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:priima_lounas_flutter/model/frequent_course_item.dart';
 import 'package:priima_lounas_flutter/model/rest_type_enums.dart';
-import 'package:priima_lounas_flutter/model/restaurant_week_menu_item.dart';
+import 'package:priima_lounas_flutter/model/restaurant_week_menu.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
 import 'package:priima_lounas_flutter/widgets/cards/likes_dislikes_courses_summary_card.dart';
 import 'package:priima_lounas_flutter/widgets/error_display.dart';
@@ -26,17 +26,6 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
   void initState() {
     super.initState();
     getData();
-  }
-
-  vote() async {
-    List<CourseVote> votes = [];
-    RestaurantMenuService service = RestaurantMenuService();
-    var data = await service.postToApi(RestApiType.votes, votes);
-    if (data is String) {
-      //TODO ERROR
-    } else {
-      List<CourseVote> updatedVotes = data;
-    }
   }
 
   getData() async {
@@ -121,7 +110,7 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
       if (error) {
         return ErrorDisplayWidget(
           errorText: errorText,
-          callback: getFrequentCourses,
+          callback: getData,
         );
       }
       if (!loading && !error) {
@@ -130,11 +119,20 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 12),
-                child: LikesDislikesCoursesSummaryCard(courses: allCourses),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: LikesDislikesCoursesSummaryCard(
+                    courses: allCourses,
+                    callback: () => getData(),
+                  ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 12),
-                child: FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
+                ),
               ),
             ],
           ),

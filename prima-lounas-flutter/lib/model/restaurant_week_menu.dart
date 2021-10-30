@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-List<RestaurantWeekMenuItem> restaurantWeekMenuItemFromJson(String str) =>
-    List<RestaurantWeekMenuItem>.from(json.decode(str).map((x) => RestaurantWeekMenuItem.fromJson(x)));
-String restaurantWeekMenuItemToJson(List<RestaurantWeekMenuItem> data) =>
+List<RestaurantWeekMenu> restaurantWeekMenuItemFromJson(String str) =>
+    List<RestaurantWeekMenu>.from(json.decode(str).map((x) => RestaurantWeekMenu.fromJson(x)));
+String restaurantWeekMenuItemToJson(List<RestaurantWeekMenu> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 List<Course> courseFromJson(String str) => List<Course>.from(json.decode(str).map((x) => Course.fromJson(x)));
@@ -16,23 +16,32 @@ List<CourseVote> courseVoteListFromJson(String str) =>
     List<CourseVote>.from(json.decode(str).map((x) => CourseVote.fromJson(x)));
 String courseVoteListToJson(List<CourseVote> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class RestaurantWeekMenuItem {
-  RestaurantWeekMenuItem({
+class RestaurantWeekMenu {
+  RestaurantWeekMenu({
     required this.id,
     required this.saveDate,
     required this.weekName,
+    required this.saladPrice,
+    required this.soupPrice,
+    required this.foodPrice,
     required this.days,
   });
 
   final int id;
   final DateTime saveDate;
   final String weekName;
+  final String saladPrice;
+  final String soupPrice;
+  final String foodPrice;
   final List<Day> days;
 
-  factory RestaurantWeekMenuItem.fromJson(Map<String, dynamic> json) => RestaurantWeekMenuItem(
+  factory RestaurantWeekMenu.fromJson(Map<String, dynamic> json) => RestaurantWeekMenu(
         id: json["id"],
         saveDate: DateTime.parse(json["saveDate"]),
         weekName: json["weekName"],
+        saladPrice: json["saladPrice"],
+        soupPrice: json["soupPrice"],
+        foodPrice: json["foodPrice"],
         days: List<Day>.from(json["days"].map((x) => Day.fromJson(x))),
       );
 
@@ -40,6 +49,9 @@ class RestaurantWeekMenuItem {
         "id": id,
         "saveDate": saveDate.toIso8601String(),
         "weekName": weekName,
+        "saladPrice": saladPrice,
+        "soupPrice": soupPrice,
+        "foodPrice": foodPrice,
         "days": List<dynamic>.from(days.map((x) => x.toJson())),
       };
 }
@@ -72,7 +84,6 @@ class Course {
   Course({
     required this.id,
     required this.name,
-    required this.price,
     required this.type,
     required this.tags,
     required this.courseVote,
@@ -80,7 +91,6 @@ class Course {
 
   final int id;
   final String name;
-  final String price;
   final String type;
   final List<String> tags;
   final CourseVote courseVote;
@@ -88,7 +98,6 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) => Course(
         id: json["id"],
         name: json["name"],
-        price: json["price"],
         type: json["type"],
         tags: List<String>.from(json["tags"].map((x) => x)),
         courseVote: CourseVote.fromJson(json["courseVote"]),
@@ -97,7 +106,6 @@ class Course {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "price": price,
         "type": type,
         "tags": List<dynamic>.from(tags.map((x) => x)),
         "courseVote": courseVote.toJson(),
