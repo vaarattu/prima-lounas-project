@@ -7,6 +7,7 @@ import 'package:priima_lounas_flutter/model/user_saved_vote.dart';
 import 'package:priima_lounas_flutter/pages/views/vote_likes_dislikes_all_list.dart';
 import 'package:priima_lounas_flutter/services/local_data_service.dart';
 import 'package:priima_lounas_flutter/services/restaurant_menu_service.dart';
+import 'package:priima_lounas_flutter/utils/helpers.dart';
 import 'package:priima_lounas_flutter/widgets/cards/restaurant_course_card.dart';
 
 class VoteLikesDislikes extends StatefulWidget {
@@ -34,7 +35,9 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
       tags: [],
       courseVote: new CourseVote(id: 0, likes: 0, dislikes: 0, votes: 0, ranked: 0));
 
-  _VoteLikesDislikesState(this.courses);
+  _VoteLikesDislikesState(this.courses) {
+    courses.sort((a, b) => a.name.compareTo(b.name));
+  }
 
   @override
   void initState() {
@@ -58,10 +61,13 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
   void getCoursesWithoutVotes() {
     List<Course> list = [];
     for (var course in courses) {
-      for (var saved in savedVotes) {
-        if (course.id == saved.id && !saved.disliked && !saved.liked) {
+      var saved = Helpers.findById(savedVotes, course.id);
+      if (saved is UserSavedVote) {
+        if (!saved.disliked && !saved.liked) {
           list.add(course);
         }
+      } else {
+        list.add(course);
       }
     }
     setState(() {
