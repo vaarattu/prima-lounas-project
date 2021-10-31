@@ -5,10 +5,7 @@ import 'package:priima_lounas_flutter/widgets/icons/course_icon.dart';
 import 'package:priima_lounas_flutter/widgets/icons/like_dislike_icons.dart';
 
 class RestaurantCourseCard extends StatelessWidget {
-  const RestaurantCourseCard({
-    required this.course,
-    required this.showVoteButtons,
-  });
+  const RestaurantCourseCard({required this.course, required this.showVoteButtons});
 
   final Course course;
   final bool showVoteButtons;
@@ -68,6 +65,7 @@ class RestaurantCourseCard extends StatelessWidget {
               ),
               showVoteButtons
                   ? LikeDislikeIcons(
+                      key: UniqueKey(),
                       courseId: course.id,
                     )
                   : Container(

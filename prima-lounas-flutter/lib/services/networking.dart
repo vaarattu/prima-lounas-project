@@ -4,7 +4,7 @@ import 'package:tuple/tuple.dart';
 
 const localhostUrl = "http://10.0.2.2:8888";
 const dropletUrl = "http://165.22.81.146:8888";
-const serverUrl = localhostUrl;
+const serverUrl = dropletUrl;
 
 const apiBasePath = "/api/v1";
 

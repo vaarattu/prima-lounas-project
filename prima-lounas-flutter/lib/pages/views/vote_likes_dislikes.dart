@@ -42,7 +42,7 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
     loadUserSavedVotes();
   }
 
-  void loadUserSavedVotes() async {
+  Future loadUserSavedVotes() async {
     var loaded = await service.readAllFromFile();
     if (loaded is List<UserSavedVote>) {
       savedVotes = loaded;
@@ -56,25 +56,58 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
   }
 
   void getCoursesWithoutVotes() {
-    var list = [];
+    List<Course> list = [];
     for (var course in courses) {
       for (var saved in savedVotes) {
-        if (course.id == saved.id) {
+        if (course.id == saved.id && !saved.disliked && !saved.liked) {
           list.add(course);
         }
       }
     }
     setState(() {
-      coursesToVote = courses.toSet().difference(list.toSet()).toList();
+      coursesToVote = list;
       if (coursesToVote.isNotEmpty) {
         currentCourse = getRandomCourse();
       }
     });
   }
 
+  Future<List<Course>> getCoursesWithVotes() async {
+    await loadUserSavedVotes();
+    List<Course> list = [];
+    for (var course in courses) {
+      for (var saved in savedVotes) {
+        if (course.id == saved.id && (saved.disliked || saved.liked)) {
+          list.add(course);
+        }
+      }
+    }
+    return list;
+  }
+
+  void navigateChangeVotes() async {
+    List<Course> votedCourses = await getCoursesWithVotes();
+    if (votedCourses.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VoteLikesDislikesAllList(
+            courses: votedCourses,
+          ),
+        ),
+      ).then((value) => loadUserSavedVotes());
+    }
+  }
+
   Course getRandomCourse() {
     Random random = new Random();
     return coursesToVote[random.nextInt(coursesToVote.length)];
+  }
+
+  void skip() {
+    setState(() {
+      currentCourse = getRandomCourse();
+    });
   }
 
   void vote(bool liked) async {
@@ -176,28 +209,16 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 32),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VoteLikesDislikesAllList(
-                              courses: courses,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text("Muuta ääniä"),
-                    ),
+                  ElevatedButton(
+                    onPressed: () => navigateChangeVotes(),
+                    child: Text("Muuta ääniä"),
                   ),
                 ],
               ),
             );
           }
           return Container(
-            height: 400,
+            height: 500,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -231,6 +252,21 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
                     ),
                     Container(
                       decoration: BoxDecoration(
+                          border: Border.all(width: 4, color: Colors.yellow), borderRadius: BorderRadius.circular(8)),
+                      child: InkWell(
+                        onTap: () => skip(),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.skip_next,
+                            size: 48,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
                           border: Border.all(width: 4, color: Colors.red), borderRadius: BorderRadius.circular(8)),
                       child: InkWell(
                         onTap: () => vote(false),
@@ -249,6 +285,10 @@ class _VoteLikesDislikesState extends State<VoteLikesDislikes> {
                 Text(
                   "Sinulla on vielä ${coursesToVote.length.toString()} ruokalajia äänestämättä.",
                   style: TextStyle(fontSize: 16),
+                ),
+                ElevatedButton(
+                  onPressed: () => navigateChangeVotes(),
+                  child: Text("Muuta ääniä"),
                 ),
               ],
             ),

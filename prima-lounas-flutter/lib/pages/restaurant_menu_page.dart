@@ -6,15 +6,20 @@ import 'package:priima_lounas_flutter/widgets/error_display.dart';
 import 'package:priima_lounas_flutter/widgets/cards/restaurant_course_card.dart';
 
 class RestaurantMenuPage extends StatefulWidget {
+  RestaurantMenuPage({Key? key}) : super(key: key);
   @override
-  _RestaurantMenuPageState createState() => _RestaurantMenuPageState();
+  RestaurantMenuPageState createState() => RestaurantMenuPageState();
 }
 
-class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
+class RestaurantMenuPageState extends State<RestaurantMenuPage> {
   bool loading = true;
   bool error = false;
   String errorText = "";
   late RestaurantWeekMenu weekMenu;
+
+  void updateState() {
+    setState(() {});
+  }
 
   @override
   void initState() {

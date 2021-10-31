@@ -128,6 +128,9 @@ class CourseVote {
   final int ranked;
 
   double calculateLikeDislikeRatio() {
+    if (likes < 0 || dislikes < 0) {
+      return -1;
+    }
     if (likes == 0 && dislikes == 0) {
       return -1;
     }

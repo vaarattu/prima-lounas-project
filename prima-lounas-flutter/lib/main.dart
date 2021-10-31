@@ -22,6 +22,11 @@ class PriimaLounasApp extends StatelessWidget {
   }
 }
 
+final GlobalKey<RestaurantMenuPageState> _restaurantMenuPageState = GlobalKey();
+void _updatePage() {
+  _restaurantMenuPageState.currentState?.updateState();
+}
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,8 +34,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int bottomBarIndex = 0;
-
-  final pages = [RestaurantMenuPage(), RestaurantVoteListsPage(), RestaurantHistoryPage(), RestaurantMorePage()];
+  final pages = [
+    RestaurantMenuPage(
+      key: _restaurantMenuPageState,
+    ),
+    RestaurantVoteListsPage(callback: _updatePage),
+    RestaurantHistoryPage(),
+    RestaurantMorePage()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +49,9 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         currentIndex: bottomBarIndex,
-        onTap: (index) => setState(() => bottomBarIndex = index),
+        onTap: (index) => setState(() {
+          bottomBarIndex = index;
+        }),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
         iconSize: 25,

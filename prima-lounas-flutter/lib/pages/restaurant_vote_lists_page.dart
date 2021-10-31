@@ -8,13 +8,14 @@ import 'package:priima_lounas_flutter/widgets/error_display.dart';
 import 'package:priima_lounas_flutter/widgets/cards/frequent_courses_summary_card.dart';
 
 class RestaurantVoteListsPage extends StatefulWidget {
+  RestaurantVoteListsPage({Key? key, required this.callback}) : super(key: key);
+  final VoidCallback callback;
   @override
   _RestaurantVoteListsPageState createState() => _RestaurantVoteListsPageState();
 }
 
 class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
   final RestaurantMenuService service = RestaurantMenuService();
-
   late List<FrequentCourseItem> frequentCourses;
   late List<Course> allCourses;
 
@@ -29,6 +30,7 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
   }
 
   getData() async {
+    widget.callback();
     setState(() {
       loading = true;
       error = false;
@@ -114,27 +116,30 @@ class _RestaurantVoteListsPageState extends State<RestaurantVoteListsPage> {
         );
       }
       if (!loading && !error) {
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: LikesDislikesCoursesSummaryCard(
-                    courses: allCourses,
-                    callback: () => getData(),
+        return RefreshIndicator(
+          onRefresh: () => getData(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    child: LikesDislikesCoursesSummaryCard(
+                      courses: allCourses,
+                      callback: () => getData(),
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    child: FrequentCoursesSummaryCard(frequentCourses: frequentCourses),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }
